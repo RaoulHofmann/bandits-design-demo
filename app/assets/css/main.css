@@ -1,0 +1,357 @@
+@import "tailwindcss";
+
+@tailwind utilities;
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --background: var(--bandit-cream);
+  --foreground: var(--pitch-dark);
+  --card: var(--bandit-light);
+  --card-foreground: var(--pitch-dark);
+  --popover: var(--bandit-cream);
+  --popover-foreground: var(--pitch-dark);
+  --primary: var(--bandit-orange);
+  --primary-foreground: var(--bandit-cream);
+  --secondary: var(--pitch-blue);
+  --secondary-foreground: var(--bandit-cream);
+  --muted: var(--neutral-muted);
+  --muted-foreground: var(--pitch-medium);
+  --accent: var(--energy-yellow);
+  --accent-foreground: var(--pitch-dark);
+  --destructive: var(--warning-red);
+  --destructive-foreground: var(--bandit-cream);
+  --border: var(--neutral-border);
+  --input: var(--bandit-light);
+  --ring: var(--bandit-orange);
+  --chart-1: var(--bandit-orange);
+  --chart-2: var(--pitch-blue);
+  --chart-3: var(--energy-yellow);
+  --chart-4: var(--team-green);
+  --chart-5: var(--pitch-light);
+  --radius: 0.5rem;
+  --sidebar: var(--bandit-light);
+  --sidebar-foreground: var(--pitch-dark);
+  --sidebar-primary: var(--bandit-orange);
+  --sidebar-primary-foreground: var(--bandit-cream);
+  --sidebar-accent: var(--energy-yellow);
+  --sidebar-accent-foreground: var(--pitch-dark);
+  --sidebar-border: var(--neutral-border);
+  --sidebar-ring: var(--bandit-orange);
+
+  /* Bandits Sports Design Palette */
+  --bandit-orange: hsla(24, 85%, 50%, 1);     /* Primary brand orange */
+  --bandit-orange-dark: hsla(20, 85%, 45%, 1); /* Darker orange */
+  --bandit-orange-light: hsla(28, 80%, 55%, 1); /* Lighter orange */
+  --bandit-cream: hsla(32, 50%, 96%, 1);      /* Warm cream background */
+  --bandit-light: hsla(32, 40%, 92%, 1);      /* Light cream for cards */
+
+  --pitch-dark: hsla(215, 45%, 15%, 1);       /* Deep sports blue */
+  --pitch-blue: hsla(215, 60%, 25%, 1);       /* Primary blue */
+  --pitch-medium: hsla(215, 40%, 35%, 1);     /* Medium blue */
+  --pitch-light: hsla(215, 30%, 45%, 1);      /* Light blue */
+
+  --energy-yellow: hsla(42, 95%, 55%, 1);     /* Vibrant energy yellow */
+  --energy-yellow-dark: hsla(38, 95%, 45%, 1); /* Dark yellow */
+  --energy-yellow-light: hsla(46, 90%, 65%, 1); /* Light yellow */
+
+  --team-green: hsla(145, 70%, 40%, 1);       /* Success/team green */
+  --team-green-light: hsla(145, 60%, 50%, 1); /* Light green */
+  --team-green-dark: hsla(145, 80%, 30%, 1);  /* Dark green */
+
+  --neutral-muted: hsla(210, 15%, 88%, 1);    /* Muted neutral */
+  --neutral-border: hsla(210, 20%, 85%, 1);   /* Border neutral */
+  --neutral-dark: hsla(215, 25%, 25%, 1);     /* Dark neutral */
+  --neutral-medium: hsla(215, 15%, 45%, 1);   /* Medium neutral */
+
+  --warning-red: hsla(0, 75%, 50%, 1);        /* Error/warning red */
+
+  /* Additional Sports colors for variety */
+  --copper-accent: hsla(25, 75%, 45%, 1);     /* Copper accent */
+  --bronze: hsla(30, 65%, 35%, 1);            /* Bronze metallic */
+  --champion-gold: hsla(45, 95%, 50%, 1);     /* Victory gold */
+  --field-green: hsla(120, 45%, 35%, 1);      /* Field/grass green */
+  --track-gray: hsla(210, 10%, 65%, 1);       /* Track/concrete gray */
+}
+
+.dark {
+  --background: var(--pitch-dark);
+  --foreground: var(--bandit-cream);
+  --card: hsla(215, 45%, 10%, 1);
+  --card-foreground: var(--bandit-cream);
+  --popover: hsla(215, 45%, 10%, 1);
+  --popover-foreground: var(--bandit-cream);
+  --primary: var(--bandit-orange);
+  --primary-foreground: var(--pitch-dark);
+  --secondary: var(--pitch-medium);
+  --secondary-foreground: var(--energy-yellow-light);
+  --muted: var(--pitch-medium);
+  --muted-foreground: var(--energy-yellow-light);
+  --accent: var(--energy-yellow);
+  --accent-foreground: var(--pitch-dark);
+  --destructive: var(--warning-red);
+  --destructive-foreground: var(--bandit-cream);
+  --border: var(--pitch-medium);
+  --input: hsla(215, 45%, 8%, 1);
+  --ring: var(--bandit-orange);
+  --chart-1: var(--bandit-orange);
+  --chart-2: var(--energy-yellow);
+  --chart-3: var(--team-green);
+  --chart-4: var(--copper-accent);
+  --chart-5: var(--champion-gold);
+  --sidebar: hsla(215, 45%, 8%, 1);
+  --sidebar-foreground: var(--bandit-cream);
+  --sidebar-primary: var(--bandit-orange);
+  --sidebar-primary-foreground: var(--pitch-dark);
+  --sidebar-accent: var(--pitch-medium);
+  --sidebar-accent-foreground: var(--energy-yellow-light);
+  --sidebar-border: var(--pitch-medium);
+  --sidebar-ring: var(--bandit-orange);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Add subtle sports texture for dynamic feel */
+    background-image: radial-gradient(circle at 1px 1px, rgba(237, 122, 26, 0.1) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+  ul {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    list-style: disc;
+    list-style-position: inside;
+  }
+  header {
+    background: linear-gradient(135deg, var(--pitch-dark), var(--pitch-blue));
+    /*border-bottom: 2px solid var(--bandit-orange);*/
+    /*box-shadow: 0 4px 20px rgba(237, 122, 26, 0.2) !important;*/
+    position: fixed;
+  }
+  footer {
+    background: linear-gradient(135deg, var(--pitch-dark), var(--pitch-blue));
+    border-top: 2px solid var(--bandit-orange);
+    box-shadow: 0 -4px 20px rgba(237, 122, 26, 0.2) !important;
+    height: 3rem;
+    margin-top: 4rem;
+  }
+  h1 {
+    padding-top: 2rem;
+    @apply text-4xl font-bold tracking-tight text-foreground mb-6;
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-weight: 800;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold tracking-tight text-foreground mb-4 mt-8;
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-weight: 700;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold tracking-tight text-foreground mb-3 mt-6;
+    font-family: 'Inter', 'Arial', sans-serif;
+    font-weight: 600;
+  }
+
+  h4 {
+    @apply text-xl font-medium tracking-tight text-foreground mb-2 mt-4;
+    font-weight: 600;
+  }
+
+  h5 {
+    @apply text-lg font-medium tracking-tight text-foreground mb-2 mt-3;
+    font-weight: 500;
+  }
+
+  h6 {
+    @apply text-base font-medium tracking-tight text-foreground mb-2 mt-2;
+    font-weight: 500;
+  }
+
+  /* Sports-inspired accents */
+  .sports-accent {
+    background: linear-gradient(135deg, var(--bandit-orange), var(--energy-yellow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .energy-glow {
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.4);
+  }
+
+  .champion-border {
+    border: 3px solid var(--bandit-orange);
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .champion-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--bandit-orange), var(--energy-yellow), var(--bandit-orange));
+    border-radius: 10px;
+    z-index: -1;
+  }
+
+  /* Code blocks with sports theme */
+  pre, code {
+    background: var(--bandit-light);
+    border: 1px solid var(--neutral-border);
+  }
+
+  /* Buttons with sports style */
+  .btn-sports {
+    background: linear-gradient(145deg, var(--bandit-orange), var(--bandit-orange-dark));
+    color: var(--bandit-cream);
+    border: 2px solid var(--energy-yellow);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-sports:hover {
+    background: linear-gradient(145deg, var(--energy-yellow), var(--energy-yellow-dark));
+    color: var(--pitch-dark);
+    border-color: var(--bandit-orange);
+    box-shadow: 0 6px 20px rgba(237, 122, 26, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary-sports {
+    background: linear-gradient(145deg, var(--pitch-blue), var(--pitch-dark));
+    color: var(--bandit-cream);
+    border: 2px solid var(--bandit-orange);
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+
+  .btn-secondary-sports:hover {
+    background: linear-gradient(145deg, var(--bandit-orange), var(--bandit-orange-dark));
+    color: var(--bandit-cream);
+    border-color: var(--energy-yellow);
+    box-shadow: 0 6px 20px rgba(29, 78, 216, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .sports-brand {
+    color: var(--bandit-orange);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-weight: 700;
+  }
+
+  .sports-cta {
+    background: linear-gradient(145deg, var(--energy-yellow), var(--energy-yellow-dark));
+    color: var(--pitch-dark);
+    border: 2px solid var(--bandit-orange);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .sports-cta:hover {
+    background: linear-gradient(145deg, var(--bandit-orange), var(--bandit-orange-dark));
+    color: var(--bandit-cream);
+    border-color: var(--energy-yellow);
+    box-shadow: 0 8px 25px rgba(250, 204, 21, 0.4);
+  }
+
+  /* Team jersey inspired cards */
+  .jersey-card {
+    background: linear-gradient(145deg, var(--bandit-light), var(--bandit-cream));
+    border: 2px solid var(--bandit-orange);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .jersey-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--bandit-orange), var(--energy-yellow), var(--bandit-orange));
+  }
+
+  .jersey-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(237, 122, 26, 0.3);
+    border-color: var(--energy-yellow);
+  }
+
+  /* Sports performance indicators */
+  .performance-badge {
+    background: linear-gradient(135deg, var(--team-green), var(--team-green-light));
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .champion-badge {
+    background: linear-gradient(135deg, var(--champion-gold), var(--energy-yellow));
+    color: var(--pitch-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  }
+}
