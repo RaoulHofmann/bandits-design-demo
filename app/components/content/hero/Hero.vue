@@ -109,7 +109,7 @@ onMounted(() => {
   position: absolute;
   width: 100%; /* Larger image */
   max-width: 800px;
-  right: -80%;
+  right: -50%;
 }
 
 .hero-image img {

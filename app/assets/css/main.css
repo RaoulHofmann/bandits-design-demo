@@ -157,6 +157,7 @@
     /* Add subtle sports texture for dynamic feel */
     background-image: radial-gradient(circle at 1px 1px, rgba(237, 122, 26, 0.1) 1px, transparent 0);
     background-size: 24px 24px;
+    background: var(--background);
   }
   ul {
     padding-top: 1rem;
@@ -178,6 +179,7 @@
     margin-top: 4rem;
   }
   h1 {
+    font-size: 4rem !important;
     padding-top: 2rem;
     @apply text-4xl font-bold tracking-tight text-foreground mb-6;
     font-family: 'Inter', 'Arial', sans-serif;

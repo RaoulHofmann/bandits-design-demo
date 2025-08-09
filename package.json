@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxt/content": "^3.6.3",
     "@nuxt/eslint": "^1.8.0",
+    "@nuxt/icon": "^1.15.0",
     "@nuxt/image": "^1.11.0",
     "@nuxt/scripts": "^0.11.10",
     "@tailwindcss/vite": "^4.1.11",

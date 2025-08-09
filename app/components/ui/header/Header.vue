@@ -36,9 +36,9 @@ onMounted(() => {
       </div>
       <nav class="menu">
         <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Portfolio</a></li>
+          <li><NuxtLink href="/">Home</NuxtLink></li>
+          <li><NuxtLink :to="{ hash: '#about' }">About</NuxtLink></li>
+          <li><NuxtLink :to="{ hash: '#portfolio' }">Portfolio</NuxtLink></li>
           <li><a href="#">Contact Us</a></li>
         </ul>
       </nav>
@@ -56,14 +56,14 @@ onMounted(() => {
   border-bottom: 0;
   box-shadow: none;
   outline-color: #000;
-  z-index: 1;
+  z-index: 2;
   transition: all 0.5s ease;
 }
 
 .header.scrolled {
   background: linear-gradient(135deg, var(--pitch-dark), var(--pitch-blue));
   border-bottom: 2px solid var(--bandit-orange);
-  z-index: 9999;
+  z-index: 999;
   box-shadow: 0 4px 20px rgba(237, 122, 26, 0.2) !important;
 }
 
@@ -80,6 +80,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   line-height: 1;
+  background: black;
 }
 
 .logo-bandits {
@@ -88,6 +89,7 @@ onMounted(() => {
   font-weight: 700;
   padding: 0.2rem 0.5rem;
   font-size: 1.2rem;
+  margin-bottom: 0.2rem;
 }
 
 .logo-design {
@@ -95,7 +97,8 @@ onMounted(() => {
   color: #fff;
   font-weight: 400;
   padding: 0.2rem 0.5rem;
-  border: 1px solid #fff;
+  border-top: 1px solid #fff;
+  text-align: center;
   font-size: 1.2rem;
 }
 
