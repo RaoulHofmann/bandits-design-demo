@@ -2,7 +2,7 @@
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Modal from '~/components/ui/Modal.vue'
+import Modal from '~/components/ui/Modal/Modal.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 

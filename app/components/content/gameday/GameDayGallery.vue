@@ -1,60 +1,138 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Modal from '~/components/ui/Modal.vue'
-
-gsap.registerPlugin(ScrollTrigger)
-
-const galleryContainer = ref(null)
-const gameItems = ref([])
-const titleRef = ref(null)
-const subtitleRef = ref(null)
+import Modal from '~/components/ui/Modal/Modal.vue'
 
 const games = [
   {
     src: '/game-day/Game_1_vs_Wolves.png.webp',
-    title: 'Game 1: Bandits vs Wolves',
+    title: 'Bandits vs Wolves',
+    subtitle: 'Victory at Home Court',
     date: 'March 15, 2024',
     venue: 'Home Court',
     result: 'Victory'
   },
   {
     src: '/game-day/Game_2_at_Buccs.png.webp',
-    title: 'Game 2: Bandits at Buccs',
+    title: 'Bandits at Buccs',
+    subtitle: 'Triumphant Away Game',
     date: 'March 22, 2024',
     venue: 'Away Game',
     result: 'Victory'
   },
   {
     src: '/game-day/Game_3_at_Hawks.png.webp',
-    title: 'Game 3: Bandits at Hawks',
+    title: 'Bandits at Hawks',
+    subtitle: 'Intense Battle',
     date: 'March 29, 2024',
     venue: 'Away Game',
     result: 'Close Match'
   },
   {
     src: '/game-day/Game_4_at_Senators.png.webp',
-    title: 'Game 4: Bandits at Senators',
+    title: 'Bandits at Senators',
+    subtitle: 'Hard Fought Contest',
     date: 'April 5, 2024',
     venue: 'Away Game',
     result: 'Hard Fought'
   },
   {
     src: '/game-day/Game_5_vs_Giants.png.webp',
-    title: 'Game 5: Bandits vs Giants',
+    title: 'Bandits vs Giants',
+    subtitle: 'Dominant Home Victory',
     date: 'April 12, 2024',
     venue: 'Home Court',
     result: 'Victory'
   }
 ]
 
-const selectedGame = ref(0)
+const currentIndex = ref(0)
 const isModalOpen = ref(false)
-const tl = ref(null)
+const wrapper = ref(null)
+const slider = ref(null)
+const navContainer = ref(null)
+const progressInterval = ref(null)
 
-const openGameModal = (index) => {
-  selectedGame.value = index
+const selectedGame = computed(() => games[currentIndex.value])
+
+const updateNavPosition = (index) => {
+  if (navContainer.value) {
+    const navItems = navContainer.value.querySelectorAll('.nav-item')
+    if (navItems.length > 0) {
+      const itemWidth = navItems[0].offsetWidth + 30 // item width + margin
+      const containerWidth = navContainer.value.offsetWidth
+      const totalWidth = itemWidth * games.length
+      
+      // Calculate the offset to center the active item
+      let offset = -(index * itemWidth) + (containerWidth / 2) - (itemWidth / 2)
+      
+      // Create infinite scroll effect by duplicating items visually
+      if (offset > 0) {
+        offset -= totalWidth
+      } else if (offset < -(totalWidth - containerWidth)) {
+        offset += totalWidth
+      }
+      
+      gsap.to('.nav-items', {
+        x: offset,
+        duration: 0.6,
+        ease: "power2.out"
+      })
+    }
+  }
+}
+
+const goToSlide = (index) => {
+  if (index !== currentIndex.value && index >= 0 && index < games.length) {
+    currentIndex.value = index
+    animateToSlide(index)
+    resetProgressBar()
+    updateNavPosition(index)
+  }
+}
+
+const nextSlide = () => {
+  const nextIndex = (currentIndex.value + 1) % games.length
+  goToSlide(nextIndex)
+}
+
+const animateToSlide = (index) => {
+  // Animate slides
+  gsap.to('.slide', {
+    xPercent: -100 * index,
+    duration: 0.8,
+    ease: "power2.inOut"
+  })
+  
+  // Animate text
+  gsap.fromTo('#text', {
+    opacity: 0,
+    y: -50
+  }, {
+    opacity: 1,
+    y: 0,
+    duration: 0.5,
+    delay: 0.3,
+    ease: "power2.out"
+  })
+}
+
+const resetProgressBar = () => {
+  // Reset all progress bars
+  gsap.set('.nav-bar::before', { transform: 'translateX(-100%)' })
+  
+  // Animate the active progress bar
+  const activeBar = document.querySelector(`.nav-item:nth-child(${currentIndex.value + 1}) .nav-bar::before`)
+  if (activeBar) {
+    gsap.to(activeBar, {
+      transform: 'translateX(0%)',
+      duration: 0.5,
+      ease: "power2.out"
+    })
+  }
+}
+
+const openGameModal = () => {
   isModalOpen.value = true
 }
 
@@ -62,335 +140,380 @@ const closeGameModal = () => {
   isModalOpen.value = false
 }
 
-const initAnimations = () => {
-  // Create main timeline for coordinated animations
-  tl.value = gsap.timeline({
-    scrollTrigger: {
-      trigger: galleryContainer.value,
-      start: "top 70%",
-      end: "bottom 30%",
-      toggleActions: "play none none reverse"
-    }
-  })
-
-  // Title animation with typewriter effect
-  if (titleRef.value) {
-    const titleText = titleRef.value.textContent
-    titleRef.value.textContent = ''
-    tl.value.to(titleRef.value, {
-      duration: 1.5,
-      text: titleText,
-      ease: "none"
-    }, 0)
-  }
-
-  // Subtitle slide up
-  if (subtitleRef.value) {
-    tl.value.fromTo(subtitleRef.value,
-      { y: 50, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-      0.5
-    )
-  }
-
-  // Game cards with morphing entrance animation
-  gameItems.value.forEach((item, index) => {
-    if (!item) return
-
-    // Get the final rotation from CSS
-    const finalRotations = [-2, 1.5, -1, 2, -1.5]
-    const finalRotation = finalRotations[index] || 0
-
-    // Set initial state
-    gsap.set(item, {
-      scale: 0,
-      rotation: finalRotation + 180,
-      opacity: 0,
-      y: 100 + (index * 20),
-      transformOrigin: "center center"
-    })
-
-    // Create individual scroll trigger for each card
-    gsap.to(item, {
-      scale: 1,
-      rotation: finalRotation,
-      opacity: 1,
-      y: 0,
-      duration: 1.5,
-      ease: "back.out(1.2)",
-      scrollTrigger: {
-        trigger: item,
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      },
-      delay: index * 0.2
-    })
-
-    // Add hover animations
-    item.addEventListener('mouseenter', () => {
-      gsap.to(item, {
-        scale: 1.05,
-        rotationY: 5,
-        z: 50,
-        duration: 0.3,
-        ease: "power2.out"
-      })
-    })
-
-    item.addEventListener('mouseleave', () => {
-      gsap.to(item, {
-        scale: 1,
-        rotationY: 0,
-        z: 0,
-        duration: 0.3,
-        ease: "power2.out"
-      })
-    })
-  })
-
-}
-
-onMounted(async () => {
-  await nextTick()
-  initAnimations()
-
+onMounted(() => {
+  // Initialize first slide
+  goToSlide(0)
 })
 
 onBeforeUnmount(() => {
-  ScrollTrigger.getAll().forEach(trigger => {
-    if (trigger.vars.trigger && galleryContainer.value?.contains(trigger.vars.trigger)) {
-      trigger.kill()
-    }
-  })
-  if (tl.value) {
-    tl.value.kill()
+  if (progressInterval.value) {
+    clearInterval(progressInterval.value)
   }
 })
 </script>
 
 <template>
-  <section class="game-day-gallery" ref="galleryContainer">
-    <div class="container">
-      <h2 class="gallery-title" ref="titleRef">Game Day Highlights</h2>
-      <p class="gallery-subtitle" ref="subtitleRef">
-        Relive the excitement from our epic matchups and victories
-      </p>
-      
-      <div class="games-grid">
-        <div
+  <div class="wrapper" id="wrapper" ref="wrapper">
+    <div class="slider" ref="slider">
+      <div 
+        v-for="(game, index) in games" 
+        :key="index"
+        class="slide" 
+        @click="openGameModal"
+      >
+        <NuxtImg 
+          :src="game.src" 
+          :alt="game.title"
+          class="slide-image"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div class="text" id="text">
+      {{ selectedGame.title }}
+    </div>
+
+    <div class="nav" id="nav" ref="navContainer">
+      <div class="nav-items">
+        <!-- Original items -->
+        <div 
           v-for="(game, index) in games"
-          :key="index"
-          :ref="(el) => gameItems[index] = el"
-          class="game-card"
-          @click="openGameModal(index)"
+          :key="`original-${index}`"
+          class="nav-item"
+          :class="{ active: index === currentIndex }"
+          @click="goToSlide(index)"
         >
-          <div class="game-image-wrapper">
-            <NuxtImg :src="game.src" :alt="game.title" class="game-image" />
-          </div>
+          <span>{{ game.title }}</span>
+          <div class="nav-bar"></div>
+        </div>
+        <!-- Duplicated items for infinite scroll effect -->
+        <div 
+          v-for="(game, index) in games"
+          :key="`duplicate-${index}`"
+          class="nav-item"
+          :class="{ active: index === currentIndex }"
+          @click="goToSlide(index)"
+        >
+          <span>{{ game.title }}</span>
+          <div class="nav-bar"></div>
         </div>
       </div>
     </div>
 
+    <button class="button" id="next" @click="nextSlide">
+      <span>Next</span>
+    </button>
+
     <!-- Modal -->
     <Modal
       :is-open="isModalOpen"
-      :image="games[selectedGame]?.src || ''"
-      :title="games[selectedGame]?.title || ''"
+      :image="selectedGame?.src || ''"
+      :title="selectedGame?.title || ''"
       :content="{
-        Date: games[selectedGame]?.date || '',
-        Venue: games[selectedGame]?.venue || '',
-        Result: games[selectedGame]?.result || ''
+        Date: selectedGame?.date || '',
+        Venue: selectedGame?.venue || '',
+        Result: selectedGame?.result || ''
       }"
       @close="closeGameModal"
     />
-  </section>
+  </div>
 </template>
 
 <style scoped>
-.game-day-gallery {
-  padding: 6rem 2rem;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  min-height: 100vh;
+.wrapper {
+  width: 100%;
+  height: 100vh;
+  background-color: #111;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.slider {
+  width: 100%;
+  height: 100vh;
   position: relative;
   overflow: hidden;
 }
 
-.game-day-gallery::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(78, 205, 196, 0.1) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-.gallery-title {
-  font-size: 4rem;
-  font-weight: 900;
-  text-align: center;
-  margin-bottom: 1rem;
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradient-shift 3s ease-in-out infinite alternate;
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
-
-.gallery-subtitle {
-  font-size: 1.4rem;
-  color: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  margin-bottom: 4rem;
-  font-weight: 300;
-  letter-spacing: 0.5px;
-}
-
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(800px, 1fr));
-  gap: 2rem;
-  padding: 2rem 0;
-  position: relative;
-  justify-items: center;
-  max-width: 1800px;
-  margin: 0 auto;
-}
-
-.game-card {
-  cursor: pointer;
-  border-radius: 8px;
-  overflow: hidden;
-  background: transparent;
-  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative;
-  flex-shrink: 0;
-  transform-style: preserve-3d;
-  width: 500px;
-  height: 600px;
-}
-
-.game-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 1px,
-      rgba(0, 0, 0, 0.01) 1px,
-      rgba(0, 0, 0, 0.01) 2px
-    );
-  pointer-events: none;
-  z-index: 1;
-}
-
-.game-card:nth-child(1) {
-  transform: rotate(-2deg) translateY(-40px);
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.game-card:nth-child(2) {
-  transform: rotate(1.5deg) translateY(80px) translateX(-30px);
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.game-card:nth-child(3) {
-  transform: rotate(-1deg) translateY(-60px) translateX(40px);
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.game-card:nth-child(4) {
-  transform: rotate(2deg) translateY(100px) translateX(-20px);
-  grid-column: 2;
-  grid-row: 2;
-}
-
-.game-card:nth-child(5) {
-  transform: rotate(-1.5deg) translateY(20px) translateX(30px);
-  grid-column: 1 / -1;
-  grid-row: 3;
-  justify-self: center;
-}
-
-.game-image-wrapper {
-  position: relative;
-  overflow: hidden;
+.slide {
   width: 100%;
   height: 100%;
-  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.game-image {
+.slide-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.game-card:hover .game-image {
-  transform: scale(1.1);
-}
-
-.game-card:hover {
-  transform: translateY(-15px);
-}
-
-.game-card:hover .game-overlay {
+.text {
+  position: absolute;
+  top: 120px;
+  left: 120px;
+  color: white;
+  font-size: 60px;
+  z-index: 10;
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(-50px);
 }
 
+/* Positionierung und Styling der Navigationsleiste */
+.nav {
+  position: absolute;
+  bottom: 80px;
+  left: 100px;
+  width: calc(100% - 200px);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.nav-items {
+  display: flex;
+  flex-direction: row;
+  transition: transform 0.6s ease;
+}
+
+/* Navigationsleiste */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+.nav-item span {
+  color: white;
+  opacity: 0.5;
+  transition: opacity 0.5s ease;
+}
+
+.nav-item.active span {
+  opacity: 1;
+}
+
+.nav-bar {
+  width: 370px; /* Set this to the width you want for the nav bar */
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.5); /* Default background color */
+  position: relative;
+  overflow: hidden;
+  opacity: 0.5; /* Default opacity */
+  transition: opacity 0.5s ease, width 0.5s ease; /* Transition for width and opacity */
+  margin-top: 20px;
+}
+
+.nav-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: white; /* Set background-color for the loading bar */
+  transform: translateX(-100%); /* Start outside the bar */
+  opacity: 1; /* Default opacity for loading animation */
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Activate loading animation for the active bar */
+.nav-item.active .nav-bar::before {
+  transform: translateX(0); /* Fill the bar from left to right */
+  opacity: 1; /* Set full opacity when active */
+}
+
+/* Full opacity for the active bar */
+.nav-item.active .nav-bar {
+  opacity: 1; /* Full opacity for active bar */
+}
+
+/* Hover-Effekt */
+.nav-item:hover .nav-bar {
+  background-color: white;
+  opacity: 1;
+}
+
+/* Pfeil-Button */
+.button {
+  position: absolute;
+  bottom: 60px;
+  right: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  color: white;
+}
+
+.button span {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Responsive Styles for smaller screens */
 @media (max-width: 768px) {
-  .gallery-title {
-    font-size: 2.5rem;
-  }
-  
-  .games-grid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    max-width: 100%;
-  }
-  
-  .game-card:nth-child(1),
-  .game-card:nth-child(2),
-  .game-card:nth-child(3),
-  .game-card:nth-child(4),
-  .game-card:nth-child(5) {
-    width: 90vw;
-    max-width: 400px;
-    height: 300px;
-    transform: rotate(0deg) translateX(0) translateY(0);
-    grid-column: 1;
-    grid-row: auto;
-    justify-self: center;
+  .button {
+    bottom: 60px;
+    right: 10px;
+    width: 60px; /* Set a smaller width */
+    height: 50px; /* Set a smaller height */
   }
 
-  .game-day-gallery {
-    padding: 3rem 1rem;
+  .button span {
+    font-size: 14px;
+  }
+
+  .text {
+    font-size: 40px;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .nav {
+    position: absolute;
+    bottom: 60px; /* Aligns the nav with the button */
+    left: 10px; /* Align left with the button */
+    width: calc(100% - 80px); /* Full width minus some padding for the button */
+    overflow: hidden;
+    z-index: 10;
+  }
+
+  .nav-items {
+    display: flex;
+    flex-direction: row;
+    transition: transform 0.6s ease;
+  }
+
+  .nav-item {
+    flex: 1; /* Each item takes equal space */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 0; /* No margin between items */
+    cursor: pointer;
+  }
+
+  /* Inactive bars */
+  .nav-bar {
+    width: 60px; /* Smaller width for inactive bars */
+    height: 4px; /* Adjust height if needed */
+    background-color: transparent;
+    position: relative;
+    overflow: hidden;
+    opacity: 0.5; /* Set to 0.5 for inactive bars on smaller screens */
+    transition: opacity 0.5s ease, width 0.5s ease; /* Animate width and opacity */
+  }
+
+  /* Active bar */
+  .nav-item.active .nav-bar {
+    width: 90px; /* Larger width for the active bar */
+    opacity: 1; /* Full opacity for active */
+  }
+
+  .nav-bar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    transform: translateX(-100%); /* Start outside the bar */
+    opacity: 0.5; /* Set to 0.5 for consistency */
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  /* Loading animation for active bar */
+  .nav-item.active .nav-bar::before {
+    transform: translateX(0); /* Fill the bar from left to right */
+    opacity: 1;
+  }
+
+  /* Inactive text styling */
+  .nav-item span {
+    font-size: 14px; /* Keep the font size for visibility */
+    opacity: 0.5; /* Slightly dim the inactive text */
+  }
+
+  /* Active text styling */
+  .nav-item.active span {
+    opacity: 1; /* Full opacity for active text */
+  }
+}
+
+/* Keep the design for larger displays */
+@media (min-width: 769px) and (max-width: 1366px) {
+  .text {
+    font-size: 80px;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .button {
+    bottom: 11vh;
+    right: 1vh;
+    width: 120px; /* Set a smaller width */
+    height: 40px; /* Set a smaller height */
+  }
+
+  .button span {
+    font-size: 16px;
+  }
+
+  .nav {
+    position: absolute;
+    bottom: 7vh;
+    left: 20px;
+    display: flex;
+    flex-direction: row;
+    z-index: 10;
+  }
+
+  .nav-bar {
+    width: 200px; /* Adjusted width to make it narrower */
+    height: 5px; /* Adjust height if needed */
+    background-color: rgba(255, 255, 255, 0.7);
+    position: relative;
+    overflow: hidden;
+    opacity: 0.5; /* Set to 0.5 for inactive bars */
+    transition: opacity 0.5s ease;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 10px; /* Reduced margin to create a more compact layout */
+    cursor: pointer;
+  }
+
+  .nav-item:last-child {
+    margin-right: 0; /* Remove margin for the last item */
+  }
+
+  .nav-item span {
+    font-size: 14px; /* Keep the font size for visibility */
   }
 }
 </style>

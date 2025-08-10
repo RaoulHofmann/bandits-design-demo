@@ -79,38 +79,38 @@
   --sidebar-ring: var(--bandit-orange);
 
   /* Bandits Sports Design Palette */
-  --bandit-orange: hsla(24, 85%, 50%, 1);     /* Primary brand orange */
+  --bandit-orange: hsla(24, 85%, 50%, 1); /* Primary brand orange */
   --bandit-orange-dark: hsla(20, 85%, 45%, 1); /* Darker orange */
   --bandit-orange-light: hsla(28, 80%, 55%, 1); /* Lighter orange */
-  --bandit-cream: hsla(32, 50%, 96%, 1);      /* Warm cream background */
-  --bandit-light: hsla(32, 40%, 92%, 1);      /* Light cream for cards */
+  --bandit-cream: hsla(32, 50%, 96%, 1); /* Warm cream background */
+  --bandit-light: hsla(32, 40%, 92%, 1); /* Light cream for cards */
 
-  --pitch-dark: hsla(215, 45%, 15%, 1);       /* Deep sports blue */
-  --pitch-blue: hsla(215, 60%, 25%, 1);       /* Primary blue */
-  --pitch-medium: hsla(215, 40%, 35%, 1);     /* Medium blue */
-  --pitch-light: hsla(215, 30%, 45%, 1);      /* Light blue */
+  --pitch-dark: hsla(215, 45%, 15%, 1); /* Deep sports blue */
+  --pitch-blue: hsla(215, 60%, 25%, 1); /* Primary blue */
+  --pitch-medium: hsla(215, 40%, 35%, 1); /* Medium blue */
+  --pitch-light: hsla(215, 30%, 45%, 1); /* Light blue */
 
-  --energy-yellow: hsla(42, 95%, 55%, 1);     /* Vibrant energy yellow */
+  --energy-yellow: hsla(42, 95%, 55%, 1); /* Vibrant energy yellow */
   --energy-yellow-dark: hsla(38, 95%, 45%, 1); /* Dark yellow */
   --energy-yellow-light: hsla(46, 90%, 65%, 1); /* Light yellow */
 
-  --team-green: hsla(145, 70%, 40%, 1);       /* Success/team green */
+  --team-green: hsla(145, 70%, 40%, 1); /* Success/team green */
   --team-green-light: hsla(145, 60%, 50%, 1); /* Light green */
-  --team-green-dark: hsla(145, 80%, 30%, 1);  /* Dark green */
+  --team-green-dark: hsla(145, 80%, 30%, 1); /* Dark green */
 
-  --neutral-muted: hsla(210, 15%, 88%, 1);    /* Muted neutral */
-  --neutral-border: hsla(210, 20%, 85%, 1);   /* Border neutral */
-  --neutral-dark: hsla(215, 25%, 25%, 1);     /* Dark neutral */
-  --neutral-medium: hsla(215, 15%, 45%, 1);   /* Medium neutral */
+  --neutral-muted: hsla(210, 15%, 88%, 1); /* Muted neutral */
+  --neutral-border: hsla(210, 20%, 85%, 1); /* Border neutral */
+  --neutral-dark: hsla(215, 25%, 25%, 1); /* Dark neutral */
+  --neutral-medium: hsla(215, 15%, 45%, 1); /* Medium neutral */
 
-  --warning-red: hsla(0, 75%, 50%, 1);        /* Error/warning red */
+  --warning-red: hsla(0, 75%, 50%, 1); /* Error/warning red */
 
   /* Additional Sports colors for variety */
-  --copper-accent: hsla(25, 75%, 45%, 1);     /* Copper accent */
-  --bronze: hsla(30, 65%, 35%, 1);            /* Bronze metallic */
-  --champion-gold: hsla(45, 95%, 50%, 1);     /* Victory gold */
-  --field-green: hsla(120, 45%, 35%, 1);      /* Field/grass green */
-  --track-gray: hsla(210, 10%, 65%, 1);       /* Track/concrete gray */
+  --copper-accent: hsla(25, 75%, 45%, 1); /* Copper accent */
+  --bronze: hsla(30, 65%, 35%, 1); /* Bronze metallic */
+  --champion-gold: hsla(45, 95%, 50%, 1); /* Victory gold */
+  --field-green: hsla(120, 45%, 35%, 1); /* Field/grass green */
+  --track-gray: hsla(210, 10%, 65%, 1); /* Track/concrete gray */
 }
 
 .dark {
@@ -152,6 +152,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     /* Add subtle sports texture for dynamic feel */
@@ -159,18 +160,20 @@
     background-size: 24px 24px;
     background: var(--background);
   }
+
   ul {
     padding-top: 1rem;
     padding-bottom: 1rem;
     list-style: disc;
     list-style-position: inside;
   }
+
   header {
     background: linear-gradient(135deg, var(--pitch-dark), var(--pitch-blue));
-    /*border-bottom: 2px solid var(--bandit-orange);*/
-    /*box-shadow: 0 4px 20px rgba(237, 122, 26, 0.2) !important;*/
+    z-index: 2000;
     position: fixed;
   }
+
   footer {
     background: linear-gradient(135deg, var(--pitch-dark), var(--pitch-blue));
     border-top: 2px solid var(--bandit-orange);
@@ -178,7 +181,9 @@
     height: 3rem;
     margin-top: 4rem;
   }
+
   h1 {
+    text-align: center;
     font-size: 4rem !important;
     padding-top: 2rem;
     @apply text-4xl font-bold tracking-tight text-foreground mb-6;
@@ -211,6 +216,24 @@
   h6 {
     @apply text-base font-medium tracking-tight text-foreground mb-2 mt-2;
     font-weight: 500;
+  }
+
+  .sub-section {
+    background: linear-gradient(135deg, var(--pitch-dark), var(--pitch-blue));
+    color: white;
+    padding: 4rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+  .sub-section > h1 {
+    padding: 0;
+    color: white;
+  }
+
+  .sub-section > p {
+    color: white;
   }
 
   /* Sports-inspired accents */
@@ -355,5 +378,14 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    color: var(--pitch-light);
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-align: center;
+    width: 70%;
   }
 }
