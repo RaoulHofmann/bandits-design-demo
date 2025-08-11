@@ -43,17 +43,17 @@ const gameCards: Card[] = [
 </script>
 
 <template>
-  <div class="gameday-gallery">
+  <section class="gameday-gallery">
     <Carousel
         :cards="gameCards"
         title="Game Day Collection"
         :initial-index="Math.floor(gameCards.length / 2)"
     />
-  </div>
+  </section>
 </template>
 
 <style scoped>
 .gameday-gallery {
-  /* Any additional styling specific to the game day gallery */
+  padding: 2rem;
 }
 </style>

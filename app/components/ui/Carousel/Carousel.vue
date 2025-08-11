@@ -52,8 +52,6 @@ const goToCard = (index: number): void => {
   currentIndex.value = index
 }
 
-console.log(currentIndex.value)
-
 onMounted(() => {
   // Touch/swipe support
   let startX = 0

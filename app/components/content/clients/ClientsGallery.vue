@@ -66,7 +66,7 @@ const closeModal = (): void => {
   <section class="clients-gallery-section sub-section">
     <div class="container">
       <div class="gallery-header">
-        <h2 class="gallery-title">Our Clients</h2>
+        <h1 class="gallery-title">Our Clients</h1>
       </div>
 
       <div class="clients-grid">

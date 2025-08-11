@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .jersey-gallery {
-  padding: 8rem 2rem;
+  padding: 2rem;
   min-height: 100vh;
   position: relative;
   overflow: hidden;

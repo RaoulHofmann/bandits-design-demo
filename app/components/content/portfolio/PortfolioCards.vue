@@ -181,7 +181,7 @@ onMounted(() => {
 }
 
 .portfolio-cards-section {
-  padding-bottom: 5rem;
+  padding-bottom: 8rem;
   display: flex;
   align-items: center;
   overflow: hidden;
