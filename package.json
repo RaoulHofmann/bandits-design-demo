@@ -6,7 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "generate:ssg": "npx nuxi generate --preset github_pages",
+    "generate:ssg": "NUXT_APP_BASE_URL=/bandits-design-demo/ npx nuxi generate --preset github_pages",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
