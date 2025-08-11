@@ -39,7 +39,7 @@ onMounted(() => {
           <li><NuxtLink href="/">Home</NuxtLink></li>
           <li><NuxtLink :to="{ hash: '#about' }">About</NuxtLink></li>
           <li><NuxtLink :to="{ hash: '#portfolio' }">Portfolio</NuxtLink></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><NuxtLink :to="{ hash: '#contact-us' }">Contact Us</NuxtLink></li>
         </ul>
       </nav>
     </div>

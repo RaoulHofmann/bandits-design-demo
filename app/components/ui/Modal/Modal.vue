@@ -89,7 +89,6 @@ onMounted(() => {
             loading="lazy"
           />
           
-          <!-- Overlay info on image -->
           <div class="modal-overlay-info">
             <h3 class="modal-title">{{ title }}</h3>
             <slot name="content" :content="content">
@@ -104,18 +103,18 @@ onMounted(() => {
         
         <div v-if="showNavigation" class="modal-navigation">
           <button 
-            @click="handlePrev" 
-            :disabled="!canNavigate?.prev"
+            :disabled="!canNavigate?.prev" 
             class="nav-button prev"
             aria-label="Previous"
+            @click="handlePrev"
           >
             ‹
           </button>
           <button 
-            @click="handleNext" 
             :disabled="!canNavigate?.next"
             class="nav-button next"
             aria-label="Next"
+            @click="handleNext"
           >
             ›
           </button>
@@ -181,6 +180,7 @@ onMounted(() => {
   position: relative;
   display: flex;
   justify-content: center;
+  height: 90vh;
 }
 
 .modal-image {

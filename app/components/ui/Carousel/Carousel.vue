@@ -2,51 +2,35 @@
 import { ref, onMounted, type Ref } from 'vue'
 import Modal from '~/components/ui/Modal/Modal.vue'
 
-interface PortfolioCard {
+export interface Card {
   id: number
   image: string
   title: string
   description: string
 }
 
-const cardsContainer: Ref<HTMLElement | null> = ref(null)
-const selectedCard: Ref<PortfolioCard | null> = ref(null)
-const isModalOpen: Ref<boolean> = ref(false)
-const cards: Ref<PortfolioCard[]> = ref([
-  {
-    id: 1,
-    image: '/portfolio/Formosa.png.webp',
-    title: 'Formosa',
-    description: 'A dynamic design showcasing the energy and movement of sports.'
-  },
-  {
-    id: 2,
-    image: '/portfolio/Game_Day_Game_3_post.png.webp',
-    title: 'Game Day',
-    description: 'Promotional material designed for game day excitement and fan engagement.'
-  },
-  {
-    id: 3,
-    image: '/portfolio/NBL1_Wallpaper_v6.jpg.webp',
-    title: 'NBL1 Wallpaper',
-    description: 'Official wallpaper design for the National Basketball League featuring bold colors and dynamic elements.'
-  },
-  {
-    id: 4,
-    image: '/portfolio/NBL_Champion.png.webp',
-    title: 'NBL Champion',
-    description: 'Championship celebration design highlighting the achievement and victory moment.'
-  },
-  {
-    id: 5,
-    image: '/portfolio/PBA_Wallpaper_v6.jpg.webp',
-    title: 'PBA Wallpaper',
-    description: 'Professional Basketball Association wallpaper with striking visuals and team branding.'
-  }
-])
-const currentIndex: Ref<number> = ref(Math.floor(cards.value.length / 2))
+interface Props {
+  cards: Card[]
+  title?: string
+  initialIndex?: number
+}
 
-const openModal = (card: PortfolioCard): void => {
+const props = withDefaults(defineProps<Props>(), {
+  title: 'Collection',
+  initialIndex: undefined
+})
+
+const cardsContainer: Ref<HTMLElement | null> = ref(null)
+const selectedCard: Ref<Card | null> = ref(null)
+const isModalOpen: Ref<boolean> = ref(false)
+
+const currentIndex: Ref<number> = ref(
+    props.initialIndex !== undefined
+        ? props.initialIndex
+        : Math.floor(props.cards.length / 2)
+)
+
+const openModal = (card: Card): void => {
   selectedCard.value = card
   isModalOpen.value = true
 }
@@ -57,35 +41,37 @@ const closeModal = (): void => {
 }
 
 const nextCard = (): void => {
-  currentIndex.value = (currentIndex.value + 1) % cards.value.length
+  currentIndex.value = (currentIndex.value + 1) % props.cards.length
 }
 
 const prevCard = (): void => {
-  currentIndex.value = currentIndex.value === 0 ? cards.value.length - 1 : currentIndex.value - 1
+  currentIndex.value = currentIndex.value === 0 ? props.cards.length - 1 : currentIndex.value - 1
 }
 
 const goToCard = (index: number): void => {
   currentIndex.value = index
 }
 
+console.log(currentIndex.value)
+
 onMounted(() => {
   // Touch/swipe support
   let startX = 0
   let endX = 0
-  
+
   cardsContainer?.value?.addEventListener('touchstart', (e) => {
     startX = e.touches[0]?.clientX || 0
   })
-  
+
   cardsContainer?.value?.addEventListener('touchend', (e) => {
     endX = e.changedTouches[0]?.clientX || 0
     handleSwipe()
   })
-  
+
   const handleSwipe = () => {
     const threshold = 50
     const diff = startX - endX
-    
+
     if (Math.abs(diff) > threshold) {
       if (diff > 0) {
         nextCard()
@@ -94,7 +80,7 @@ onMounted(() => {
       }
     }
   }
-  
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') nextCard()
     if (e.key === 'ArrowLeft') prevCard()
@@ -103,16 +89,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <section ref="cardsContainer" class="portfolio-cards-section">
+  <section ref="cardsContainer" class="cards-section">
     <div class="container">
       <div class="gallery-header">
-        <h2 class="gallery-title">Wallpaper Collection</h2>
+        <h2 class="gallery-title">{{ title }}</h2>
       </div>
       <div class="cards-grid pt-4" :style="{ '--current-index': currentIndex }">
         <div
             v-for="(card, index) in cards"
             :key="card.id"
-            class="portfolio-card"
+            class="card"
             :class="{ active: index === currentIndex }"
             :style="{ '--card-index': index }"
             @click="openModal(card)"
@@ -140,7 +126,7 @@ onMounted(() => {
                     stroke-linejoin="round"/>
             </svg>
           </button>
-          
+
           <button @click="nextCard" class="nav-btn next-btn" aria-label="Next Card">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -180,7 +166,7 @@ onMounted(() => {
   text-transform: uppercase;
 }
 
-.portfolio-cards-section {
+.cards-section {
   padding-bottom: 5rem;
   display: flex;
   align-items: center;
@@ -214,7 +200,7 @@ onMounted(() => {
   align-items: center;
 }
 
-.portfolio-card {
+.card {
   position: absolute;
   width: 400px;
   height: 600px;
@@ -225,9 +211,9 @@ onMounted(() => {
   z-index: 1;
 }
 
-.portfolio-card.active {
+.card.active {
   transform: translateX(calc((var(--card-index) - var(--current-index)) * 350px)) rotate(calc((var(--card-index) - var(--current-index)) * 2deg)) scale(1);
-  z-index: 10;
+  z-index: 101;
 }
 
 .card-inner {
@@ -238,7 +224,7 @@ onMounted(() => {
   transform-style: preserve-3d;
 }
 
-.portfolio-card:hover .card-inner {
+.card:hover .card-inner {
   transform: rotateY(180deg);
 }
 
@@ -289,7 +275,7 @@ onMounted(() => {
   text-align: center;
 }
 
-.portfolio-card:hover .card-shine {
+.card:hover .card-shine {
   left: 100%;
 }
 
@@ -384,7 +370,7 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .portfolio-cards-section {
+  .cards-section {
     padding: 4rem 1rem;
   }
 
@@ -393,13 +379,13 @@ onMounted(() => {
     padding-top: 0;
   }
 
-  .portfolio-card {
+  .card {
     width: 100%;
     height: 600px;
     transform: translateX(calc((var(--card-index) - var(--current-index)) * 250px)) rotate(calc((var(--card-index) - var(--current-index)) * 2deg)) scale(0.9);
   }
 
-  .portfolio-card.active {
+  .card.active {
     transform: translateX(calc((var(--card-index) - var(--current-index)) * 250px)) rotate(calc((var(--card-index) - var(--current-index)) * 2deg)) scale(1);
   }
 }
